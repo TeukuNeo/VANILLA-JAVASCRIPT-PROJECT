@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD BASIC</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0 50px;
+        }
+
+        .container {
+            display: flex;
+            gap: 50px;
+        }
+
+        #posts {
+            width: 400px;
+        }
+
+        #posts div {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .options {
+            display: flex;
+            gap: 25px;
+        }
+
+        i {
+            cursor: pointer;
+        }
+
+        #msg {
+            color: red;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+</head>
+
+<body>
+
+    <h1>Daily Post App</h1>
+    <div class="container">
+        <div class="left">
+            <form id="form">
+                <label for="">Write your post here</label>
+                <br><br>
+                <textarea name="" id="input" cols="30" rows="10"></textarea>
+                <br><br>
+                <div id="msg"></div>
+                <button id="sub-button" type="submit">Post</button>
+            </form>
+        </div>
+        <div class="right">
+            <h3>Your post here</h3>
+            <div id="posts">
+                <div>
+                    <p id="text">Post 1</p>
+                    <span class="options">
+                        <i onClick="editPost(this)" class="fas fa-edit"></i>
+                        <i onClick="deletePost(this)" class="fas fa-trash-alt"></i>
+                    </span>
+                </div>
+                <div>
+                    <p id="text">Post 2</p>
+                    <span class="options">
+                        <i onClick="editPost(this)" class="fas fa-edit"></i>
+                        <i onClick="deletePost(this)" class="fas fa-trash-alt"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let form = document.getElementById("form")
+        let input = document.getElementById("input")
+        let msg = document.getElementById("msg")
+        let posts = document.getElementById("posts")
+        let data = JSON.parse(localStorage.getItem("posts")) || []
+        let buttonContainer = null;
+
+        function formValidation(){
+            if (input.value === "") {
+                msg.innerHTML = "Post cannot be blank";
+                console.log("failure")
+            } else {
+                console.log("success")
+                msg.innerHTML = "";
+                acceptData()
+            }
+        }
+
+        form.addEventListener("submit", (e) => {
+            e.preventDefault()
+            console.log("button clicked")
+            formValidation()
+        })
+
+        let createPost = () => {
+            posts.innerHTML = ""
+            data.forEach((post, index) => {
+                posts.innerHTML += `
+           <div>
+                <p>${post.text}</p>
+                <span class="options">
+                    <i onClick="editPost(${index})" class="fas fa-edit"></i>
+                    <i onClick="deletePost(${index})" class="fas fa-trash-alt"></i>
+                </span>
+            </div>`;
+            })
+            input.value = "";
+        }
+        createPost()
+
+        let acceptData = () => {
+            data.push({ text: input.value })
+            console.log(data)
+            createPost()
+            localStorage.setItem("posts", JSON.stringify(data))
+        }
+
+        let deletePost = (index) => {
+            data.splice(index, 1)
+            createPost()
+            localStorage.setItem("posts", JSON.stringify(data))
+        }
+
+        let editPost = (index) => {
+            if (document.getElementById("sub-button").style.display = "none") {
+                if (index >= 0 && index < data.length) {
+                    input.value = data[index].text;
+                    // Buat container untuk tombol-tombol jika belum ada
+                    if (!buttonContainer) {
+                        buttonContainer = document.createElement("div");
+                    }
+                    // Tambahkan tombol simpan untuk mengubah data
+                    const saveButton = document.createElement("button");
+                    saveButton.textContent = "Simpan";
+                    saveButton.onclick = () => {
+                        data[index].text = input.value;
+                        localStorage.setItem("posts", JSON.stringify(data));
+                        createPost();
+                        // Hilangkan tombol-tombol
+                        buttonContainer.remove();
+                        buttonContainer = null;
+                        document.getElementById("sub-button").style.display = "block"
+                    };
+                    // Tambahkan tombol batal untuk membatalkan perubahan
+                    const cancelButton = document.createElement("button");
+                    cancelButton.textContent = "Batal";
+                    cancelButton.onclick = () => {
+                        input.value = "";
+                        createPost();
+                        // Hilangkan tombol-tombol
+                        buttonContainer.remove();
+                        buttonContainer = null;
+                        document.getElementById("sub-button").style.display = "block"
+                    };
+                    // Hapus isi container sebelumnya
+                    buttonContainer.innerHTML = "";
+                    // Tambahkan tombol-tombol ke container
+                    buttonContainer.appendChild(saveButton);
+                    buttonContainer.appendChild(cancelButton);
+                    // Tambahkan container ke halaman
+                    document.body.appendChild(buttonContainer);
+
+                } else {
+                    console.log("Index tidak valid");
+                }
+            }
+
+        }
+    </script>
+</body>
+
+</html>
