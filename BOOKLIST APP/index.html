@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <script src="https://kit.fontawesome.com/db84365019.js" crossorigin="anonymous"></script>
+    <title>BOOK LIST APP</title>
+</head>
+
+<body>
+    <div class="container mt-4">
+        <h1 class="display text-center"></h1>
+        <i class="fas fa-book-open text-primary"></i>
+        My<span class="text-primary">Book</span>List</h1>
+        <form id="book-form">
+            <div class="form-group">
+                <label for="">Title</label>
+                <input type="text" id="title" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="">Author</label>
+                <input type="text" id="author" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="">ISBN</label>
+                <input type="text" id="isbn" class="form-control">
+            </div>
+            <input type="submit" value="Add Book" class="btn btn-primary btn-block">
+        </form>
+        <table class="table table-striped mt-5">
+           <thead>
+            <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>ISBN</th>
+                <th>DELETE</th>
+            </tr>
+           </thead> 
+           <tbody id="book-list">
+
+           </tbody>
+        </table>
+    </div>
+</body>
+<script src="app.js"></script>
+
+</html>
